@@ -1,0 +1,13 @@
+{
+  "version": "0.1",
+  "language": "en",
+  "words": ["ngxs-action-creator", "socio", "octocat", "NGXS", "typeof", "Owlbear", "ngrx"],
+  "flagWords": [],
+  "ignorePaths": [
+    "package.json",
+    "package-lock.json",
+    "yarn.lock",
+    "tsconfig.json",
+    "node_modules/**"
+  ]
+}
