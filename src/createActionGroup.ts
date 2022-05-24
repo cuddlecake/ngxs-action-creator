@@ -29,6 +29,33 @@ export function createActionGroup<
   return result as ActionCreatorGroup<Actions, Source>;
 }
 
+type ActionGroupInput<Actions extends Record<string, Props | EmptyProps>> = {
+  [EventName in keyof Actions]: Actions[EventName] &
+    EmptyStringCheck<EventName & string, 'event name'> &
+    TemplateLiteralCheck<EventName & string, 'event name'> &
+    ForbiddenCharactersCheck<EventName & string, 'event name'> &
+    UniqueEventNameCheck<keyof Actions & string, EventName & string>;
+};
+
+type ActionCreatorGroup<
+  Actions extends Record<string, Props | EmptyProps>,
+  Source extends string
+> = {
+  [key in keyof Actions as ActionName<
+    key & string
+  >]: Actions[key] extends EmptyProps
+    ? EmptyActionCreator<SourceActionName<Source, Actions[key] & string>>
+    : ActionCreator<
+        SourceActionName<Source, key & string>,
+        TypeFromProps<Actions[key]>
+      >;
+};
+
+/*
+ * The following types are copied from https://github.com/ngrx/platform/blob/master/modules/store/src/action_group_creator_models.ts
+ * and slightly adapted for use with class based actions
+ */
+
 function toActionName<EventName extends string>(
   eventName: EventName
 ): ActionName<EventName> {
@@ -43,14 +70,6 @@ function toActionName<EventName extends string>(
 function capitalize<T extends string>(text: T): Capitalize<T> {
   return (text.charAt(0).toUpperCase() + text.substring(1)) as Capitalize<T>;
 }
-
-type ActionGroupInput<Actions extends Record<string, Props | EmptyProps>> = {
-  [EventName in keyof Actions]: Actions[EventName] &
-    EmptyStringCheck<EventName & string, 'event name'> &
-    TemplateLiteralCheck<EventName & string, 'event name'> &
-    ForbiddenCharactersCheck<EventName & string, 'event name'> &
-    UniqueEventNameCheck<keyof Actions & string, EventName & string>;
-};
 
 type Join<
   Str extends string,
@@ -120,17 +139,3 @@ type UniqueEventNameCheck<
 type ActionName<EventName extends string> = Join<
   TitleCase<Lowercase<Trim<EventName>>>
 >;
-
-type ActionCreatorGroup<
-  Actions extends Record<string, Props | EmptyProps>,
-  Source extends string
-> = {
-  [key in keyof Actions as ActionName<
-    key & string
-  >]: Actions[key] extends EmptyProps
-    ? EmptyActionCreator<SourceActionName<Source, Actions[key] & string>>
-    : ActionCreator<
-        SourceActionName<Source, key & string>,
-        TypeFromProps<Actions[key]>
-      >;
-};

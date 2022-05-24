@@ -6,17 +6,6 @@ import {
   TypeFromProps,
 } from './models';
 
-export function withoutProps(): EmptyProps {
-  return { _as: 'empty' };
-}
-
-export function withProps<
-  P extends Record<string | symbol | number, any>
->(): Props<P> {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return { _as: 'props', _p: undefined! };
-}
-
 export function createAction<Name extends string>(
   name: string
 ): EmptyActionCreator<Name>;
@@ -49,4 +38,15 @@ export function createAction<
       }
     } as ActionCreator<Name, TypeFromProps<P>>;
   }
+}
+
+export function withoutProps(): EmptyProps {
+  return { _as: 'empty' };
+}
+
+export function withProps<
+  P extends Record<string | symbol | number, any>
+>(): Props<P> {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return { _as: 'props', _p: undefined! };
 }
