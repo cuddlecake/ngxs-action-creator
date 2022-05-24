@@ -4,6 +4,7 @@
   "files": [
     "dist"
   ],
+  "homepage": "https://github.com/cuddlecake/ngxs-action-creator",
   "main": "./dist/ngxs-action-creator.umd.js",
   "module": "./dist/ngxs-action-creator.es.js",
   "exports": {
